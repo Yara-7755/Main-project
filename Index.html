@@ -244,6 +244,103 @@
             color: #b1878d;
             margin-top: 6px;
         }
+        #contact {
+            background: #111111;
+            padding: 96px 80px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: start;
+        }
+
+        .contact-info .section-eyebrow { color: #e8a3b8; }
+        .contact-info .section-title   { color: #ffffff; }
+
+        .contact-info p {
+            font-size: 15px;
+            color: #9b9b9b;
+            line-height: 1.9;
+            margin-bottom: 32px;
+        }
+
+        .contact-details {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: #9b9b9b;
+            font-size: 14px;
+        }
+
+        .contact-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(232,163,184,0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+            background: rgba(232,163,184,0.35);
+        }
+        .contact-item a {
+            color: #9b9b9b;
+            text-decoration: none;
+        }
+        .contact-item a:hover { color: #e8a3b8; }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-field {
+            width: 100%;
+            padding: 14px 20px;
+            background: #1e1e1e;
+            border: 1.5px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color .2s;
+        }
+        .form-field::placeholder { color: #555555; }
+        .form-field:focus         { border-color: #e8a3b8; }
+
+        textarea.form-field {
+            resize: vertical;
+            min-height: 130px;
+        }
+
+        .btn-send {
+            padding: 15px;
+            background: #b1878d;
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .btn-send:hover { opacity: .85; transform: translateY(-1px); }
+        .btn-send:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+
 
     </style>
 </head>
@@ -275,7 +372,7 @@
         Portfolio
     </h1>
     <p class="hero-desc">
-        I'm a Software Engineer specializing in Full-Stack web and mobile development. I focus on writing clean backend logic and crafting seamless user experiences to build complete digital products."    </p>
+        I'm a Software Engineer specializing in Full-Stack web and mobile development. I focus on writing clean backend logic and crafting seamless user experiences to build complete digital products.  </p>
     <div class="hero-actions">
         <a href="#projects" class="btn-primary">Explore Now</a>
         <a href="#about" class="btn-ghost">
@@ -315,6 +412,53 @@
             <div class="stat-label">Ideas to Explore</div>
         </div>
     </div>
+</section>
+
+<section id="contact">
+
+
+    <div class="contact-info">
+
+        <h2 class="section-title">Contact Me</h2>
+        <p>Have a project in mind, a question, or just want to say hello? Fill in the form and I'll get back to you as soon as possible.</p>
+
+        <div class="contact-details">
+            <div class="contact-item">
+                <div class="contact-icon">📧</div>
+                <a href="mailto:yara@example.com">alawatyyara@gmail.com</a>
+            </div>
+            <div class="contact-item">
+                <div class="contact-icon">📱</div>
+                <span>+962 78 524 8005</span>
+            </div>
+            <div class="contact-item">
+                <div class="contact-icon">📍</div>
+                <span>Jordan</span>
+            </div>
+            <div class="contact-item">
+                <div class="contact-icon">💼</div>
+                <a href="https://linkedin.com/in/yourprofile" target="_blank">linkedin.com/in/yara-al-owety</a>
+            </div>
+            <div class="contact-item">
+                <div class="contact-icon">🐙</div>
+                <a href="https://github.com/Yara-7755" target="_blank">https://github.com/Yara-7755</a>
+            </div>
+        </div>
+    </div>
+    <div>
+        <form class="contact-form" id="contactForm">
+            <div class="form-row">
+                <input  class="form-field" type="text"  id="fname" placeholder="First Name" required />
+                <input  class="form-field" type="text"  id="lname" placeholder="Last Name"  required />
+            </div>
+            <input      class="form-field" type="email" id="email" placeholder="Email Address" required />
+            <input      class="form-field" type="text"  id="subject" placeholder="Subject" required />
+            <textarea   class="form-field"              id="message" placeholder="Your message..." required></textarea>
+            <button type="submit" class="btn-send" id="sendBtn">Send Message →</button>
+            <div class="form-feedback" id="formFeedback"></div>
+        </form>
+    </div>
+
 </section>
 
 
