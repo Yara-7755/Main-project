@@ -460,7 +460,56 @@
     </div>
 
 </section>
+<script>
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+        e.preventDefault();
 
+        var fname   = document.getElementById('fname').value;
+        var lname   = document.getElementById('lname').value;
+        var email   = document.getElementById('email').value;
+        var subject = document.getElementById('subject').value;
+        var message = document.getElementById('message').value;
+
+        var feedback = document.getElementById('formFeedback');
+        var btn      = document.getElementById('sendBtn');
+
+        if (fname == "" || lname == "" || email == "" || subject == "" || message == "") {
+            feedback.className   = 'form-feedback error';
+            feedback.textContent = 'Please fill in all fields.';
+            return;
+        }
+
+        btn.disabled    = true;
+        btn.textContent = 'Sending...';
+        var formData = new FormData();
+        formData.append('first_name', fname);
+        formData.append('last_name',  lname);
+        formData.append('email',      email);
+        formData.append('subject',    subject);
+        formData.append('message',    message);
+
+        var request = new XMLHttpRequest();
+        request.open('POST', 'contact.php');
+
+        request.onload = function() {
+            var result = JSON.parse(request.responseText);
+
+            btn.disabled    = false;
+            btn.textContent = 'Send Message →';
+
+            if (result.success == true) {
+                feedback.className   = 'form-feedback success';
+                feedback.textContent = 'Message sent successfully!';
+                document.getElementById('contactForm').reset();
+            } else {
+                feedback.className   = 'form-feedback error';
+                feedback.textContent = result.message;
+            }
+        };
+
+        request.send(formData);
+    });
+</script>
 
 
 </body>
