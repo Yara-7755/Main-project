@@ -15,7 +15,7 @@ $messages = $msg->getAll();
 <head>
     <meta charset="UTF-8">
     <title>Messages</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../assets/style.css">
 </head>
 <body class="dash-page">
 <div class="dash-main">
