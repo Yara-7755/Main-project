@@ -342,8 +342,21 @@
         .btn-send:disabled { opacity: .6; cursor: not-allowed; transform: none; }
 
 
+
+        .skill-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .skill-icon img {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+            border-radius: 8px;
+        }
     </style>
 </head>
+
 <body>
 <nav>
     <div class="nav-logo">YARA <span>AL-OWETY</span></div>
@@ -351,9 +364,11 @@
         <li><a href="#about">About</a></li>
         <li><a href="#skills">Skills</a></li>
         <li><a href="#projects">Projects</a></li>
+        <li><a href="#Cskill">Create Skill</a></li>
     </ul>
     <a href="#contact" class="nav-contact-btn">Contact Me</a>
 </nav>
+
 <div class="hero">
 
 <div class="hero-photo">
@@ -414,6 +429,40 @@
     </div>
 </section>
 
+
+<section id="skills">
+    <p class="section-eyebrow">What I Know</p>
+    <h2 class="section-title">My Skills</h2>
+    <div class="skills-grid" id="skillsGrid">
+        <p style="color:#9b9b9b;">Loading skills...</p>
+    </div>
+</section>
+
+
+<section id="Cskill">
+
+    <h2 class="section-title">Add New Skill</h2>
+
+    <form id="addSkillForm">
+
+        <input class="form-field" type="text" id="skillIcon" placeholder="Image URL e.g: https://..." />
+        <input class="form-field" type="text" id="skillName" placeholder="Skill Name e.g: HTML & CSS" />
+        <input class="form-field" type="text" id="skillDesc" placeholder="Description" />
+        <input class="form-field" type="number" id="skillLevel" placeholder="Level (0 to 100)" min="0" max="100" />
+
+        <button type="submit" class="btn-send" id="addSkillBtn">Add Skill →</button>
+        <div class="form-feedback" id="skillFeedback"></div>
+    </form>
+</section>
+
+<section id="projects">
+    <p class="section-eyebrow">My Work</p>
+    <h2 class="section-title">Projects</h2>
+    <div class="projects-grid" id="projectsGrid">
+        <p style="color:#9b9b9b;">Loading projects...</p>
+    </div>
+</section>
+
 <section id="contact">
 
 
@@ -460,7 +509,94 @@
     </div>
 
 </section>
+
+
 <script>
+    function loadSkills() {
+        var skillsRequest = new XMLHttpRequest();
+        skillsRequest.open('GET', 'get_skills.php');
+
+        skillsRequest.onload = function() {
+            var result = JSON.parse(skillsRequest.responseText);
+
+            if (result.success == true) {
+                var grid   = document.getElementById('skillsGrid');
+                grid.innerHTML = '';
+                var skills = result.data;
+
+                for (var i = 0; i < skills.length; i++) {
+                    var skill = skills[i];
+                    var card  = '<div class="skill-card">'
+                        + '<div class="skill-icon"><img src="' + skill.icon + '" alt="' + skill.name + '" onerror="this.onerror=null; this.src=\'https://via.placeholder.com/48\';"></div>'
+                        + '<div class="skill-name">'  + skill.name        + '</div>'
+                        + '<div class="skill-desc">'  + skill.description + '</div>'
+                        + '<div class="skill-level-row">'
+                        + '<span class="skill-level-label">Level</span>'
+                        + '<span class="skill-level-num">' + skill.level  + '%</span>'
+                        + '</div>'
+                        + '<div class="skill-bar-wrap">'
+                        + '<div class="skill-bar" style="width:' + skill.level + '%;"></div>'
+                        + '</div>'
+                        + '</div>';
+                    grid.innerHTML = grid.innerHTML + card;
+                }
+            }
+        };
+
+        skillsRequest.send();
+    }
+    loadSkills();
+
+    document.getElementById('addSkillForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        var icon     = document.getElementById('skillIcon').value;
+        var name     = document.getElementById('skillName').value;
+        var desc     = document.getElementById('skillDesc').value;
+        var level    = document.getElementById('skillLevel').value;
+        var feedback = document.getElementById('skillFeedback');
+        var btn      = document.getElementById('addSkillBtn');
+
+        if (icon == "" || name == "" || desc == "" || level == "") {
+            feedback.className   = 'form-feedback error';
+            feedback.textContent = 'Please fill in all fields.';
+            return;
+        }
+
+        btn.disabled    = true;
+        btn.textContent = 'Adding...';
+
+        var formData = new FormData();
+        formData.append('icon',  icon);
+        formData.append('name',  name);
+        formData.append('desc',  desc);
+        formData.append('level', level);
+
+        var request = new XMLHttpRequest();
+        request.open('POST', 'add_skill.php');
+
+        request.onload = function() {
+            var result = JSON.parse(request.responseText);
+
+            btn.disabled    = false;
+            btn.textContent = 'Add Skill →';
+
+            if (result.success == true) {
+                feedback.className   = 'form-feedback success';
+                feedback.textContent = 'Skill added successfully!';
+                document.getElementById('addSkillForm').reset();
+                loadSkills();
+            } else {
+                feedback.className   = 'form-feedback error';
+                feedback.textContent = result.message;
+            }
+        };
+
+        request.send(formData);
+    });
+
+
+
     document.getElementById('contactForm').addEventListener('submit', function(e) {
         e.preventDefault();
 
@@ -481,6 +617,7 @@
 
         btn.disabled    = true;
         btn.textContent = 'Sending...';
+
         var formData = new FormData();
         formData.append('first_name', fname);
         formData.append('last_name',  lname);
@@ -509,8 +646,49 @@
 
         request.send(formData);
     });
-</script>
+    /* PROJECTS */
+    function loadProjects() {
+        var request = new XMLHttpRequest();
+        request.open('GET', 'get_projects.php');
 
+        request.onload = function() {
+            var result = JSON.parse(request.responseText);
+            var grid   = document.getElementById('projectsGrid');
+            grid.innerHTML = '';
+
+            if (result.success == true) {
+                var projects = result.data;
+
+                for (var i = 0; i < projects.length; i++) {
+                    var p = projects[i];
+
+                    // تقسيم الـ tech لـ tags
+                    var techs    = p.tech.split(',');
+                    var techHtml = '';
+                    for (var t = 0; t < techs.length; t++) {
+                        techHtml += '<span class="tech-tag">' + techs[t].trim() + '</span>';
+                    }
+
+                    var num  = (i + 1);
+                    var card = '<div class="project-card">'
+                        + '<div class="project-number">Project ' + num + '</div>'
+                        + '<div class="project-divider"></div>'
+                        + '<div class="project-title">' + p.title + '</div>'
+                        + '<div class="project-desc">'  + p.description + '</div>'
+                        + '<div class="project-tech">'  + techHtml + '</div>'
+                        + '<a href="' + p.link + '" target="_blank" class="project-link">View Project →</a>'
+                        + '</div>';
+
+                    grid.innerHTML = grid.innerHTML + card;
+                }
+            }
+        };
+
+        request.send();
+    }
+
+    loadProjects();
+</script>
 
 </body>
 </html>
